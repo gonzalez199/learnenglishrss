@@ -1,0 +1,8 @@
+.DS_Store/
+.DS_Store
+._*
+/.idea
+/node_modules
+dist/*
+!dist/res/
+!dist/.well-known
