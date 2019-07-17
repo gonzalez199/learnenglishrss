@@ -7,7 +7,7 @@ var path = require('path');
 var hostname = os.hostname();
 var WebpackDevServer = require('webpack-dev-server');
 const webpack = require('webpack');
-const port = 3090;
+const port = 80;
 const devPort = 3091;
 const corsPort = 3093;
 const app = express();
@@ -96,7 +96,7 @@ if(process.env.NODE_ENV == 'production') {
     	ca: ca
     };
     const httpsServer = https.createServer(credentials, app);
-    httpsServer.listen(3443, () => {
+    httpsServer.listen(443, () => {
     	console.log('HTTPS Server running on port 443');
     });
   }
