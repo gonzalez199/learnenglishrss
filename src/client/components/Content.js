@@ -11,7 +11,7 @@ import RssListFrame from "Components/RssListFrame"
 const FrameStyled = styled.div`
   padding-top: 55px;
   background: gainsboro;
-  height: 100%;
+  min-height: 100vh;
 `
 const ContentInside = styled.div`
   border-radius: 4px;

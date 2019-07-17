@@ -21,7 +21,6 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {}
-
   }
 
   componentDidMount() {
@@ -30,9 +29,8 @@ class Header extends Component {
   menuItem(value, path) {
     var isActive
     let match = this.props.match
-    console.log("checkmatch", match)
     if(match){
-      if(match.url.includes(path) || (match.url==="/"&&path.includes("home"))){
+      if((match.url=="/" && path=="/")|| (path!="/"&&match.url.includes(path))){
         isActive = true
       }
     }

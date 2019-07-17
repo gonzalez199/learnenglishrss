@@ -48,17 +48,21 @@ class RssGeneratorFrame extends Component {
     super(props);
     this.itemRefs = {}
     this.state = {
-      messages: ''
+      message: ''
     }
   }
 
   handleChange (e) {
     console.log("handlechange", this.nameInput.value)
+    this.state.message = undefined
     this.forceUpdate()
   }
 
   onCopy(value){
     copy(value)
+    this.setState({
+      message: "Copied to clipboard!"
+    })
   }
 
   downloadTxtFile(name, value){
@@ -74,6 +78,7 @@ class RssGeneratorFrame extends Component {
     const title = this.nameInput&&this.nameInput.value||'Undefined Title'
     const description = this.descriptionImput&&this.descriptionImput.value||''
     const image = this.imageInput&&this.imageInput.value||''
+    const url = this.rssLinkInput&&this.rssLinkInput.value||''
     var feed = new RSS({
       title: title,
       link: '',
@@ -135,8 +140,8 @@ class RssGeneratorFrame extends Component {
       <textarea type="text" onChange={(e) => {this.handleChange(e)}} ref={el => this.descriptionImput=el} placeholder="Description" className="form-control mb-3" />
       <span>Author</span>
       <input type="text" onChange={(e) => {this.handleChange(e)}} ref={el => this.authorInput=el} placeholder="Author" className="form-control mb-3" />
-      <span>Rss Link</span>
-      <input type="text" onChange={(e) => {this.handleChange(e)}} ref={el => this.imageInput=el} placeholder="https://example.com/podcast.rss" className="form-control mb-3" />
+      <span>Rss Link (Optional)</span>
+      <input type="text" onChange={(e) => {this.handleChange(e)}} ref={el => this.rssLinkInput=el} placeholder="https://example.com/podcast.rss" className="form-control mb-3" />
       <span>Image Url</span>
       <input type="text" onChange={(e) => {this.handleChange(e)}} ref={el => this.imageInput=el} placeholder="https://example.com/image.jpg" className="form-control mb-3" />
       <span>Feed content</span>
@@ -144,6 +149,7 @@ class RssGeneratorFrame extends Component {
       <div className="d-flex align-items-center mb-2"><span>Rss Result</span>
       <Button className="ml-3" variant="light" onClick={this.onCopy.bind(this, xmlResult)}>Copy</Button>
       <Button className="ml-3" variant="light" onClick={this.downloadTxtFile.bind(this, title, xmlResult)}>Download</Button>
+      <span className="ml-3 text-success">{this.state.message}</span>
       </div>
       <RssResult>
       <pre>

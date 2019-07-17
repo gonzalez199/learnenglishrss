@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import styled from 'styled-components';
 import {isEmpty, hashCode, rssKeyByName, getHashColorFromString} from 'Utils'
 import ContentLoader from "react-content-loader"
-import {Row, Col,Dropdown,DropdownButton, Button, Badge} from 'react-bootstrap'
+import {Row, Col,Dropdown,DropdownButton, Button, Badge, Modal} from 'react-bootstrap'
 import { Switch, Router, Route, Link, withRouter } from 'react-router-dom'
 import {GET_RSSS,GET_RSSS_OWNER, GET_RSSS_SUBSCRIBED, CLEAR_RSSS_SUBSCRIBED, UPDATE_RSS_ITEM} from 'Constants/actionTypes'
 import { connect } from 'react-redux';
@@ -14,7 +14,11 @@ import {ADMIN_UID} from 'Constants'
 import history from 'Client/history'
 import LoadingView from "Client/LoadingView";
 import LoadMoreView from "Client/LoadMoreView";
+import algolia from "Client/Algolia"
+import {MdDescription} from 'react-icons/md';
+import copy from 'copy-to-clipboard';
 import { devicesSizeNum } from "Client/devices";
+
 const mapStateToProps = (state) =>{
   return{
     items: state.rss.popular,
@@ -63,10 +67,14 @@ const RssImgStyled = styled.div`
     text-align: center;
   }
 `
+const FilterContainer = styled.div`
+width: 250px;
+`
 
 class RssItem extends Component {
   constructor(props){
     super(props)
+    this.state = {}
   }
   componentDidMount(){
 
@@ -76,13 +84,71 @@ class RssItem extends Component {
     var rss = this.props.rss._source
   }
 
+  onCopyClick(value){
+    copy(value)
+    this.setState({message: "Copied to clipboard!"})
+  }
+  onVoteClick(){
+    var ref = db.collection('rss').doc(this.props.rss.id);
+    ref.update({
+        vote: fb.firestore.FieldValue.increment(1)
+    });
+    this.setState({voted: true})
+  }
+  onReportClick(){
+    this.setState({ showReport: true });
+  }
+
+  handleReportClose() {
+   this.setState({ showReport: false});
+ }
+
+ handleSendReport(){
+   const email = this.reportEmailInput.value
+   const content = this.reportContentInput.value
+   if(!email){
+     this.setState({reportMessage: "Enter your email address"})
+     return
+   }
+
+   if(!validateEmail(email)){
+     this.setState({reportMessage: "Please enter a vailed email address"})
+     return
+   }
+
+   if(!content){
+     this.setState({reportMessage: "Enter report content"})
+     return
+   }
+   const rssData = this.props.rss.data()
+   var postData = {
+   created: fb.firestore.FieldValue.serverTimestamp(),
+   link: rssData.link,
+   name: rssData.name,
+   email: email,
+   content: content,
+   vote: 0
+   };
+   db.collection("report").doc().set(postData)
+   .then(()=> {
+       this.setState({reportMessage: "Reported", reported: true})
+   })
+   .catch((error)=> {
+     this.setState({reportMessage: "Something error"})
+   });
+
+
+ }
+
   render(){
     var itemData = this.props.rss
-    var rss = itemData.data()
-
-
-    rss.key = itemData.id
-
+    var rss
+    if(itemData.objectID){
+      rss = itemData
+    }else{
+      rss = itemData.data()
+      rss.objectID = itemData.id
+    }
     var color = getHashColorFromString(rss.name)
 
 
@@ -93,36 +159,71 @@ class RssItem extends Component {
     }else{
       imageView = <span>{rss.image}</span>
     }
+
     return(
       <RssItemFrameStyled background={this.props.background} className="pl-2 pr-2 pt-3 pb-3 d-flex">
       <div>
-      <Link to={link}>
       <RssImgStyled color={color}
-       className="d-flex align-items-center justify-content-center pointer">
+       className="d-flex align-items-center justify-content-center">
       {imageView}
       </RssImgStyled>
-      </Link>
       </div>
       <div className="pl-2 w-100 text-truncate">
       <div className="text-truncate">
-      <Link to={link}><b>{rss.name}</b>
-      </Link>
+      <b>{rss.name}</b>
       </div>
       <div className="text-truncate mt-1">
-      <a href={rss.link} className="text-info" target="_blank">{rss.link}</a>
+      <span>{rss.link}</span>
+      </div>
+      <div className="mt-1">
+      <span>Votes: {rss.vote+(this.state.voted?1:0)}</span>
+      </div>
+      <div className="mt-1 mb-1">
+      <Button size="sm" variant="light" disabled={this.state.voted} onClick={this.onVoteClick.bind(this, link)}>Vote up</Button>
+      <Button className="ml-3" size="sm" variant="light" onClick={this.onReportClick.bind(this, link)}>Report</Button>
+      <Button className="ml-3" size="sm" variant="light" onClick={this.onCopyClick.bind(this, link)}>Copy url</Button>
+
+      <span className="ml-3 text-success">{this.state.message}</span>
       </div>
       </div>
+      <Modal show={this.state.showReport} onHide={this.handleReportClose.bind(this)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Report rss</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+          <div>
+          <span>Your email address</span>
+          <input type="email" ref={el => this.reportEmailInput=el} placeholder="email@email.com" className="form-control mb-3" />
+          <span>Report content</span>
+          <textarea type="text" rows="10" ref={el => this.reportContentInput=el}
+          placeholder="Describe your problem" className="form-control mb-3" />
+          </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <span className="text-warning">
+            {this.state.reportMessage}
+            </span>
+            <Button variant="primary" disabled={this.state.reported} onClick={this.handleSendReport.bind(this)}>
+              Send Report
+            </Button>
+          </Modal.Footer>
+      </Modal>
       </RssItemFrameStyled>
     )
   }
 }
+function validateEmail(email)
+{
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+}
 
 export const RssItemConnected = connect(mapStateToPropsRssItem, mapDispatchToPropsRssItem)(RssItem)
-const rssFilters = {created: "New", popular: "Voted"}
+const rssFilters = {created: "New", vote: "Most votes"}
 class RsssFrame extends Component {
   constructor(props){
     super(props)
-    this.state={filter: "popular"}
+    this.state={filter: "vote"}
   }
 
   setRssItems(items, clear){
@@ -135,13 +236,14 @@ class RsssFrame extends Component {
     }
   }
 
-  getData(start, filter){
+  getData(start){
     if(this.state.apiRunning){
       return
     }
+    console.log("checkgetdata", this.state.filter)
     var first = db.collection("rss")
-        .orderBy("created")
-        .startAfter(start)
+        .orderBy(this.state.filter, "desc")
+        .endBefore(start)
         .limit(25);
     this.setState({apiRunning: true})
     first.get().then((documentSnapshots)=>{
@@ -190,32 +292,54 @@ class RsssFrame extends Component {
     this.setRssItems(undefined, true)
     this.getData(0)
   }
-  render(){
-    var rows
-    var filterItems  = this.getFilterItems(rssFilters)
-    var filter = <div className="d-flex align-items-center">
-      {filterItems}
-      </div>
-    if(this.props.items){
-      rows = generateRssRows(this.props.items)
-      var loadMoreView
-      if(rows.length>0 && rows.length%10===0){
+
+  handleSearchInputChange(){
+    const value = this.searchInput.value
+    if(value){
+      algolia.search(value)
+      .then((responses)=> {
+        this.setRssItems(responses.hits, true)
+      });
+    }else{
+      this.getData(0)
+    }
+
+  }
+
+  getContent(){
+    var rows = generateRssRows(this.props.items)
+    var loadMoreView
+    if(rows.length>0){
+      if(rows.length%10===0){
         loadMoreView = <div><LoadMoreView loading={this.state.apiRunning}/>
         <Waypoint onEnter={this.nextItems.bind(this)} /></div>
       }
-      if(rows.length>0){
+      return <div>
+        {rows}
+        <div className="mt-2">
+        {loadMoreView}
+        </div>
+      </div>
+    }else{
+      return <div className="p-3">No items for this view</div>
+    }
+
+  }
+  render(){
+    var filterItems  = this.getFilterItems(rssFilters)
+    var filter = <FilterContainer className="d-flex flex-nowrap align-items-center">
+      {filterItems}
+      </FilterContainer>
+    if(this.props.items){
         return(
           <div>
-          {filter}
-          {rows}
-          <div className="mt-2">
-          {loadMoreView}
-          </div>
+            <div className="d-flex align-items-center">
+            {filter}
+            <input type="text" ref={el => this.searchInput=el} onChange={this.handleSearchInputChange.bind(this)} placeholder="Search" className="form-control" />
+            </div>
+            {this.getContent()}
           </div>
         )
-      }else{
-        return <div className="p-3">No items for this view</div>
-      }
     }else{
       return <LoadingView/>
     }
