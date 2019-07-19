@@ -236,29 +236,36 @@ class RsssFrame extends Component {
     }
   }
 
-  getData(start){
+  getData(startDocumentSnapshot){
     if(this.state.apiRunning){
       return
     }
-    console.log("checkgetdata", this.state.filter)
-    var first = db.collection("rss")
-        .orderBy(this.state.filter, "desc")
-        .endBefore(start)
-        .limit(25);
+    var first
+    if(startDocumentSnapshot){
+      first = db.collection("rss")
+          .orderBy(this.state.filter, "desc")
+          .startAfter(startDocumentSnapshot)
+          .limit(10);
+    }else{
+      first = db.collection("rss")
+          .orderBy(this.state.filter, "desc")
+          .limit(10);
+    }
+
     this.setState({apiRunning: true})
     first.get().then((documentSnapshots)=>{
-      this.onAgentData(documentSnapshots, start===0)
+      this.onAgentData(documentSnapshots, !startDocumentSnapshot)
     });
   }
 
   nextItems(){
     if(this.props.items && this.props.items.length>0){
-      this.getData(this.props.items.length)
+      this.getData(this.props.items[this.props.items.length-1])
     }
   }
   componentDidUpdate(){
     if(!this.props.items){
-      this.getData(0)
+      this.getData()
     }
   }
 
@@ -266,7 +273,7 @@ class RsssFrame extends Component {
     if(this.props.items){
       this.setRssItems(undefined, true)
     }else{
-      this.getData(0)
+      this.getData()
     }
   }
   onFilterSelect(key){
@@ -290,7 +297,7 @@ class RsssFrame extends Component {
   }
   onSortIconClick(){
     this.setRssItems(undefined, true)
-    this.getData(0)
+    this.getData()
   }
 
   handleSearchInputChange(){
@@ -301,7 +308,7 @@ class RsssFrame extends Component {
         this.setRssItems(responses.hits, true)
       });
     }else{
-      this.getData(0)
+      this.getData()
     }
 
   }
