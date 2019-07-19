@@ -330,19 +330,15 @@ class RsssFrame extends Component {
     var filter = <FilterContainer className="d-flex flex-nowrap align-items-center">
       {filterItems}
       </FilterContainer>
-    if(this.props.items){
         return(
           <div>
             <div className="d-flex align-items-center">
             {filter}
             <input type="text" ref={el => this.searchInput=el} onChange={this.handleSearchInputChange.bind(this)} placeholder="Search" className="form-control" />
             </div>
-            {this.getContent()}
+            {this.props.items?this.getContent():<LoadingView/>}
           </div>
         )
-    }else{
-      return <LoadingView/>
-    }
   }
 }
 
