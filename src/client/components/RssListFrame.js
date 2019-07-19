@@ -89,7 +89,7 @@ class RssItem extends Component {
     this.setState({message: "Copied to clipboard!"})
   }
   onVoteClick(){
-    var ref = db.collection('rss').doc(this.props.rss.id);
+    var ref = db.collection('rss').doc(this.props.rss.id||this.props.rss.objectID);
     ref.update({
         vote: fb.firestore.FieldValue.increment(1)
     });
