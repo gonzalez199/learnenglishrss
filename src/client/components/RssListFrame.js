@@ -282,7 +282,7 @@ class RsssFrame extends Component {
       var variant = "light"
       if(this.state.filter===key){
         selected = "selected"
-        variant="outline-primary"
+        variant="outline-secondary"
       }
       filterItems.push(<Button className={`ml-2 mt-2 mb-2 ${selected}`} key={key} variant={variant} onClick={()=>{this.onFilterSelect(key)}}>{item}</Button>)
     })
