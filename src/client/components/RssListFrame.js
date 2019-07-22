@@ -181,7 +181,7 @@ class RssItem extends Component {
       <div className="mt-1 mb-1">
       <Button size="sm" variant="light" disabled={this.state.voted} onClick={this.onVoteClick.bind(this, link)}>Vote up</Button>
       <Button className="ml-3" size="sm" variant="light" onClick={this.onReportClick.bind(this, link)}>Report</Button>
-      <Button className="ml-3" size="sm" variant="light" onClick={this.onCopyClick.bind(this, link)}>Copy url</Button>
+      <Button className="ml-3" size="sm" variant="outline-secondary" onClick={this.onCopyClick.bind(this, link)}>Copy url</Button>
 
       <span className="ml-3 text-success">{this.state.message}</span>
       </div>
