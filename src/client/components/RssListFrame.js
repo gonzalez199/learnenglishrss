@@ -350,14 +350,16 @@ class RsssFrame extends Component {
   }
   render(){
     var filterItems  = this.getFilterItems(rssFilters)
-    var filter = <FilterContainer className="d-flex flex-nowrap align-items-center mb-2">
+    var filter = <FilterContainer className="d-flex flex-nowrap align-items-center">
       {filterItems}
       </FilterContainer>
         return(
           <div>
             <div className="d-flex flex-wrap align-items-center mt-2">
             {filter}
+            <div className="p-2 w-100">
             <input type="text" ref={el => this.searchInput=el} onChange={this.handleSearchInputChange.bind(this)} placeholder="Search" className="form-control" />
+            </div>
             </div>
             {this.props.items?this.getContent():<LoadingView/>}
           </div>
