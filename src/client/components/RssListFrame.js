@@ -197,7 +197,7 @@ class RssItem extends Component {
       <div className="mt-1 mb-1">
       <Button size="md" variant="light" disabled={this.state.voted} onClick={this.onVoteClick.bind(this, link)}>Vote up</Button>
       <Button className="ml-3" size="md" variant="light" onClick={this.onReportClick.bind(this, link)}>Report</Button>
-      <Button className="ml-3" size="md" variant="outline-secondary" onClick={this.onCopyClick.bind(this, link)}>Copy url</Button>
+      <Button className="ml-3" size="md" variant="outline-primary" onClick={this.onCopyClick.bind(this, link)}>Copy url</Button>
 
       <span className="ml-3 text-success">{this.state.message}</span>
       </div>
@@ -305,7 +305,7 @@ class RsssFrame extends Component {
       var variant = "light"
       if(this.state.filter===key){
         selected = "selected"
-        variant="outline-secondary"
+        variant="outline-primary"
       }
       filterItems.push(<Button className={`ml-2 mt-2 mb-2 ${selected}`} key={key} variant={variant} onClick={()=>{this.onFilterSelect(key)}}>{item}</Button>)
     })
