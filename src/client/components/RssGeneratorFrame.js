@@ -132,19 +132,30 @@ class RssGeneratorFrame extends Component {
     }
     var xmlResult = beautify(feed.xml())
     return(
-      <FrameStyled className="p-2">
-      <p>RSS Generator</p>
+      <FrameStyled className="p-3">
+      <div className='mb-3'>
       <span>Title</span>
+      </div>
       <input type="text" onChange={(e) => {this.handleChange(e)}} ref={el => this.nameInput=el} placeholder="Rss title" className="form-control mb-3" />
+      <div className='mb-3'>
       <span>Description</span>
+      </div>
       <textarea type="text" onChange={(e) => {this.handleChange(e)}} ref={el => this.descriptionImput=el} placeholder="Description" className="form-control mb-3" />
+      <div className='mb-3'>
       <span>Author</span>
+      </div>
       <input type="text" onChange={(e) => {this.handleChange(e)}} ref={el => this.authorInput=el} placeholder="Author" className="form-control mb-3" />
+      <div className='mb-3'>
       <span>Rss Link (Optional)</span>
+      </div>
       <input type="text" onChange={(e) => {this.handleChange(e)}} ref={el => this.rssLinkInput=el} placeholder="https://example.com/podcast.rss" className="form-control mb-3" />
+      <div className='mb-3'>
       <span>Image Url</span>
+      </div>
       <input type="text" onChange={(e) => {this.handleChange(e)}} ref={el => this.imageInput=el} placeholder="https://example.com/image.jpg" className="form-control mb-3" />
+      <div className='mb-3'>
       <span>Feed content</span>
+      </div>
       <textarea type="text" rows="10" onChange={(e) => {this.handleChange(e)}} ref={el => this.feedsInput=el} defaultValue={feedContentPlaceHolder} placeholder={feedContentPlaceHolder} className="form-control mb-3" />
       <div className="d-flex align-items-center mb-2"><span>Rss Result</span>
       <Button className="ml-3" variant="light" onClick={this.onCopy.bind(this, xmlResult)}>Copy</Button>

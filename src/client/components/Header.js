@@ -7,14 +7,33 @@ import { devices,devicesSizeNum } from "Client/devices";
 import history from 'Client/history'
 
 export const HeaderStyledContainer = styled.div`
-  background-color: lavender;
+  background-color: white;
   position: fixed;
   left: 0;
   top: 0;
   z-index: 100;
   width: 100%;
-  height: 50px;
+  height: 60px;
+  &:after {
+    bottom: -5px;
+    box-shadow: inset 0px 4px 8px -3px rgba(17, 17, 17, .06);
+    content: "";
+    height: 5px;
+    left: 0px;
+    opacity: 1;
+    pointer-events: none;
+    position: absolute;
+    right: 0px;
+    width: 100%;
+    z-index: 2050;
+}
 `;
+
+const mapDispatchToProps = (dispatch) => {
+  return{
+  }
+}
+
 
 class Header extends Component {
 
@@ -59,11 +78,12 @@ class Header extends Component {
     );
   }
 }
+const connectedHeader = connect(undefined, mapDispatchToProps)(Header)
 const RenderContent = () => {
   return(
   <Switch>
-  <Route path='/:frame' component={Header}/>
-  <Route path='/' component={Header}/>
+  <Route path='/:frame' component={connectedHeader}/>
+  <Route path='/' component={connectedHeader}/>
   </Switch>
 )
 };

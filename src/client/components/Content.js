@@ -9,15 +9,15 @@ import RssGeneratorFrame from "Components/RssGeneratorFrame"
 import AddRssFrame from "Components/AddRssFrame"
 import RssListFrame from "Components/RssListFrame"
 const FrameStyled = styled.div`
-  padding-top: 55px;
+  padding-top: 60px;
   background: gainsboro;
   min-height: 100vh;
 `
 const ContentInside = styled.div`
-  border-radius: 4px;
+  border-radius: 0px;
   width: 100%;
   max-width: 900px;
-  background: whitesmoke;
+  background: white;
 `
 
 class Content extends Component {

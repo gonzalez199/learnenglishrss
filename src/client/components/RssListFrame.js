@@ -58,8 +58,8 @@ const RssImgStyled = styled.div`
   border: solid 3px whitesmoke;
   background: ${props => props.color};
   img{
-    height: 80px;
-    width: 80px;
+    height: 100px;
+    width: 100px;
   }
   span{
     max-height: 69px;
@@ -80,13 +80,28 @@ class RssItem extends Component {
 
   }
 
-  onReportClick(){
-    var rss = this.props.rss._source
-  }
-
   onCopyClick(value){
     copy(value)
-    this.setState({message: "Copied to clipboard!"})
+    if(this.state.copied){
+      var itemData = this.props.rss
+      var rss
+      if(itemData.objectID){
+        rss = itemData
+      }else{
+        rss = itemData.data()
+      }
+      var ref = db.collection('rss').doc(this.props.rss.id||this.props.rss.objectID);
+      if(rss.copied){
+        ref.update({
+            copied: fb.firestore.FieldValue.increment(1)
+        });
+      }else{
+        ref.update({
+            copied: 1
+        });
+      }
+    }
+    this.setState({message: "Copied to clipboard!", copied: true})
   }
   onVoteClick(){
     var ref = db.collection('rss').doc(this.props.rss.id||this.props.rss.objectID);
@@ -177,11 +192,12 @@ class RssItem extends Component {
       </div>
       <div className="mt-1">
       <span>Votes: {rss.vote+(this.state.voted?1:0)}</span>
+      <span className="ml-3">Copied: {(rss.copied||0)+(this.state.copied?1:0)}</span>
       </div>
       <div className="mt-1 mb-1">
-      <Button size="sm" variant="light" disabled={this.state.voted} onClick={this.onVoteClick.bind(this, link)}>Vote up</Button>
-      <Button className="ml-3" size="sm" variant="light" onClick={this.onReportClick.bind(this, link)}>Report</Button>
-      <Button className="ml-3" size="sm" variant="outline-secondary" onClick={this.onCopyClick.bind(this, link)}>Copy url</Button>
+      <Button size="md" variant="light" disabled={this.state.voted} onClick={this.onVoteClick.bind(this, link)}>Vote up</Button>
+      <Button className="ml-3" size="md" variant="light" onClick={this.onReportClick.bind(this, link)}>Report</Button>
+      <Button className="ml-3" size="md" variant="outline-secondary" onClick={this.onCopyClick.bind(this, link)}>Copy url</Button>
 
       <span className="ml-3 text-success">{this.state.message}</span>
       </div>
@@ -334,12 +350,12 @@ class RsssFrame extends Component {
   }
   render(){
     var filterItems  = this.getFilterItems(rssFilters)
-    var filter = <FilterContainer className="d-flex flex-nowrap align-items-center">
+    var filter = <FilterContainer className="d-flex flex-nowrap align-items-center mb-2">
       {filterItems}
       </FilterContainer>
         return(
           <div>
-            <div className="d-flex align-items-center">
+            <div className="d-flex flex-wrap align-items-center mt-2">
             {filter}
             <input type="text" ref={el => this.searchInput=el} onChange={this.handleSearchInputChange.bind(this)} placeholder="Search" className="form-control" />
             </div>
@@ -361,11 +377,7 @@ function generateRssRows(items){
   var rows=[]
   if(items){
     items.forEach( item =>{
-      var color
-      if(rows.length%2==1){
-        color= "whitesmoke"
-      }
-      rows.push(<RssItemConnected background={color} key={rows.length} rss={item}/>);
+      rows.push(<RssItemConnected key={rows.length} rss={item}/>);
     })
   }
   return rows
