@@ -10,7 +10,7 @@ import AddRssFrame from "Components/AddRssFrame"
 import RssListFrame from "Components/RssListFrame"
 const FrameStyled = styled.div`
   padding-top: 60px;
-  background: gainsboro;
+  background: whitesmoke;
   min-height: 100vh;
 `
 const ContentInside = styled.div`
