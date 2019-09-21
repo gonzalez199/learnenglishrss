@@ -10,7 +10,6 @@ export default (state = {}, action) => {
       searchQuery: action.value
     }
     case GET_RSSS:
-    console.log("checkongetrss", action.value)
     var popular
     if(state.popular && !action.clear){
       popular = [...state.popular, ...action.value]

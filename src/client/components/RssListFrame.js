@@ -82,7 +82,7 @@ class RssItem extends Component {
 
   onCopyClick(value){
     copy(value)
-    if(this.state.copied){
+    if(!this.state.copied){
       var itemData = this.props.rss
       var rss
       if(itemData.objectID){
