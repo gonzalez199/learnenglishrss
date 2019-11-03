@@ -14,9 +14,10 @@ const app = express();
 const axios = require('axios')
 app.enable('trust proxy');
 var bodyParser = require('body-parser')
+var compression = require('compression')
 
 app.use(bodyParser.json())
-
+app.use(compression())
 var cors_proxy = require('cors-anywhere');
 var whitelist = [
   'local-server',
