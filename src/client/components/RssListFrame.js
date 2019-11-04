@@ -70,7 +70,16 @@ const RssImgStyled = styled.div`
 const FilterContainer = styled.div`
 width: 250px;
 `
-
+const HeaderFrame = styled.div`
+  position: fixed;
+  background: white;
+  height: 7rem;
+  width: 100%;
+  max-width: 900px;
+`
+const ContentFrame = styled.div`
+  padding-top: 7rem;
+`
 class RssItem extends Component {
   constructor(props){
     super(props)
@@ -354,15 +363,17 @@ class RsssFrame extends Component {
       {filterItems}
       </FilterContainer>
         return(
-          <div>
-            <div className="d-flex flex-wrap align-items-center mt-2">
+          <React.Fragment>
+            <HeaderFrame className="d-flex flex-wrap align-items-center">
             {filter}
             <div className="p-2 w-100">
             <input type="text" ref={el => this.searchInput=el} onChange={this.handleSearchInputChange.bind(this)} placeholder="Search" className="form-control" />
             </div>
-            </div>
+            </HeaderFrame>
+            <ContentFrame>
             {this.props.items?this.getContent():<LoadingView/>}
-          </div>
+            </ContentFrame>
+          </React.Fragment>
         )
   }
 }

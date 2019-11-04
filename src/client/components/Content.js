@@ -30,7 +30,7 @@ class Content extends Component {
   render(){
     return(
       <FrameStyled className="d-flex justify-content-center">
-      <ContentInside className="pl-2 pr-2">
+      <ContentInside>
       <Switch>
       <Route exact path='/' component={RssListFrame}/>
       <Route exact path='/generator/' component={RssGeneratorFrame}/>
