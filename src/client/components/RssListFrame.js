@@ -18,6 +18,7 @@ import algolia from "Client/Algolia"
 import {MdDescription} from 'react-icons/md';
 import copy from 'copy-to-clipboard';
 import { devicesSizeNum } from "Client/devices";
+import { StickyContainer, Sticky } from 'react-sticky';
 
 const mapStateToProps = (state) =>{
   return{
@@ -71,14 +72,13 @@ const FilterContainer = styled.div`
 width: 250px;
 `
 const HeaderFrame = styled.div`
-  position: fixed;
-  background: white;
   height: 7rem;
   width: 100%;
-  max-width: 900px;
+`
+const SearchBox = styled.div`
+  background: white;
 `
 const ContentFrame = styled.div`
-  padding-top: 7rem;
 `
 class RssItem extends Component {
   constructor(props){
@@ -244,6 +244,7 @@ function validateEmail(email)
 }
 
 export const RssItemConnected = connect(mapStateToPropsRssItem, mapDispatchToPropsRssItem)(RssItem)
+const SITE_HEADER_HEIGHT = 60
 const rssFilters = {created: "New", vote: "Most votes"}
 class RsssFrame extends Component {
   constructor(props){
@@ -363,17 +364,33 @@ class RsssFrame extends Component {
       {filterItems}
       </FilterContainer>
         return(
-          <React.Fragment>
+          <StickyContainer className={this.props.className}>
             <HeaderFrame className="d-flex flex-wrap align-items-center">
+            <div className="pt-2">
             {filter}
-            <div className="p-2 w-100">
-            <input type="text" ref={el => this.searchInput=el} onChange={this.handleSearchInputChange.bind(this)} placeholder="Search" className="form-control" />
             </div>
+            <div className="w-100">
+            <Sticky relative={this.props.relative}>
+            {({ style, distanceFromBottom }) => {
+              let styleCopy = Object.assign({}, style)
+              if(!this.props.relative){
+                styleCopy.top = distanceFromBottom <= SITE_HEADER_HEIGHT ? 0 : SITE_HEADER_HEIGHT
+              }
+            return (
+              <SearchBox className="p-2" style={styleCopy}>
+                <input type="text" ref={el => this.searchInput=el}
+                onChange={this.handleSearchInputChange.bind(this)} placeholder="Search" className="form-control" />
+              </SearchBox>
+            )
+            }
+            }
+            </Sticky>
+              </div>
             </HeaderFrame>
             <ContentFrame>
             {this.props.items?this.getContent():<LoadingView/>}
             </ContentFrame>
-          </React.Fragment>
+          </StickyContainer>
         )
   }
 }
