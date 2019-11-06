@@ -285,6 +285,7 @@ class RsssFrame extends Component {
   }
 
   nextItems(){
+    console.log("checkonnextitems")
     if(this.props.items && this.props.items.length>0){
       this.getData(this.props.items[this.props.items.length-1])
     }
@@ -344,8 +345,8 @@ class RsssFrame extends Component {
     var loadMoreView
     if(rows.length>0){
       if(rows.length%10===0){
-        loadMoreView = <div><LoadMoreView loading={this.state.apiRunning}/>
-        <Waypoint onEnter={this.nextItems.bind(this)} /></div>
+        loadMoreView = <div><Waypoint onEnter={this.nextItems.bind(this)} /><LoadMoreView loading={this.state.apiRunning}/>
+        </div>
       }
       return <div>
         {rows}
