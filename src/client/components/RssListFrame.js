@@ -46,19 +46,13 @@ const mapDispatchToProps = (dispatch) => {
 
 const RssItemFrameStyled = styled.div`
   background: ${props => props.background || "transparent"};
-  .more-icon{
-    display: block;
-  }
-  :hover{
-    .more-icon{
-      display: block;
-    }
-  }
 `
 const RssImgStyled = styled.div`
   border: solid 3px whitesmoke;
   background: ${props => props.color};
   img{
+    object-fit: cover;
+    object-position: center;
     height: 100px;
     width: 100px;
   }
@@ -79,6 +73,9 @@ const SearchBox = styled.div`
   background: white;
 `
 const ContentFrame = styled.div`
+`
+const MessagePlaceHolder = styled.div`
+  height: 1.5rem;
 `
 class RssItem extends Component {
   constructor(props){
@@ -185,7 +182,7 @@ class RssItem extends Component {
     }
 
     return(
-      <RssItemFrameStyled background={this.props.background} className="pl-2 pr-2 pt-3 pb-3 d-flex">
+      <RssItemFrameStyled background={this.props.background} className="pl-2 pr-2 pt-2 d-flex">
       <div>
       <RssImgStyled color={color}
        className="d-flex align-items-center justify-content-center">
@@ -200,16 +197,16 @@ class RssItem extends Component {
       <span>{rss.link}</span>
       </div>
       <div className="mt-1">
-      <span>Votes: {rss.vote+(this.state.voted?1:0)}</span>
-      <span className="ml-3">Copied: {(rss.copied||0)+(this.state.copied?1:0)}</span>
+      <span>Copied: {(rss.copied||0)+(this.state.copied?1:0)}</span>
+      <span className="ml-3">Votes: {rss.vote+(this.state.voted?1:0)}</span>
+
       </div>
       <div className="mt-1 mb-1">
-      <Button size="md" variant="light" disabled={this.state.voted} onClick={this.onVoteClick.bind(this, link)}>Vote up</Button>
-      <Button className="ml-3" size="md" variant="light" onClick={this.onReportClick.bind(this, link)}>Report</Button>
-      <Button className="ml-3" size="md" variant="outline-primary" onClick={this.onCopyClick.bind(this, link)}>Copy url</Button>
-
-      <span className="ml-3 text-success">{this.state.message}</span>
+      <Button size="md" variant="outline-primary" onClick={this.onCopyClick.bind(this, link)}>Copy url</Button>
+      <Button className="ml-md-5 ml-3" size="md" variant="light" disabled={this.state.voted} onClick={this.onVoteClick.bind(this, link)}>Vote up</Button>
+      <Button className="ml-md-5 ml-3" size="md" variant="light" onClick={this.onReportClick.bind(this, link)}>Report</Button>
       </div>
+      <MessagePlaceHolder><span className="text-success">{this.state.message}</span></MessagePlaceHolder>
       </div>
       <Modal show={this.state.showReport} onHide={this.handleReportClose.bind(this)}>
           <Modal.Header closeButton>
