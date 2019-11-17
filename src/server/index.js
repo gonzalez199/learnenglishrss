@@ -41,13 +41,13 @@ const axiosCorsServer = axios.create({
 app.use('/vendors', express.static(__dirname + '/node_modules/'));
 
 
-app.use('/reader', function(req, res) {
+app.use('/read-url', function(req, res) {
   axiosCorsServer.get(`${req.url}`)
   .then((response) =>{
     res.send(response.data)
   })
   .catch((error) => {
-    res.send("something error")
+    res.status(404).send("Url error")
     console.log(error.message);
   });
 });
@@ -63,15 +63,14 @@ function ensureSecure(req, res, next){
   res.redirect(path); // express 4.x
 }
 
-app.use(express.static('dist', { maxAge: "1h" })) //maxAge should in miliseconds
 
-app.get('/robots.txt', function (req, res) {
+app.use("/", express.static('dist', { maxAge: "1h" }))
+
+app.use('/robots.txt', function (req, res) {
+  console.log("checkgetrobots.txt")
     res.sendFile(path.join(__dirname, '../../dist/res', 'robots.txt'));
 });
 
-app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, '../../dist', 'index.html'));
-});
 if(process.env.NODE_ENV == 'development') {
     console.log('Server is running on development mode');
 

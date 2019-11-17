@@ -52,9 +52,8 @@ module.exports = {
     historyApiFallback: true,
     contentBase: './dist',
     port: 3091,
-    open: true,
     proxy: [{
-      context: ['/reader'],
+      context: ['/read-url', '/check-transcript'],
       target: 'http://localhost:3090',
     }]
   },

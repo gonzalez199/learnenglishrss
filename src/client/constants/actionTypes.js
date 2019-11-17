@@ -1,1 +1,3 @@
 export const GET_RSSS = "GET_RSSS"
+export const UPDATE_RSS_ITEM = "UPDATE_RSS_ITEM"
+export const UPDATE_AUTH_STATE = "UPDATE_AUTH_STATE"

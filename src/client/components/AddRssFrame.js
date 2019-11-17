@@ -47,7 +47,7 @@ class AddRssFrame extends Component {
     console.log("fetchRssLink", link)
     if(link){
       let parser = new RSSParser();
-      let redirect = `${window.location.origin}/reader/${link}`
+      let redirect = `${window.location.origin}/read-url/${link}`
       parser.parseURL(redirect, (err, feed) => {
         console.log(feed)
         if(feed){
@@ -96,7 +96,8 @@ class AddRssFrame extends Component {
       link: link,
       name: name,
       tags: tagsvalue,
-      vote: 0
+      vote: 0,
+      copied: 0
       };
       if(description){
         postData.description = description

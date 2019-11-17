@@ -56,7 +56,7 @@ class App extends Component {
       <div>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>ERS</title>
+        <title>Learn English Rss</title>
         <meta name="description" content="Rss to Learn English"/>
         <link rel="canonical" href="https://learnenglishrss.herokuapp.com" />
       </Helmet>
