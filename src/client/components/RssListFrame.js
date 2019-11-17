@@ -406,7 +406,7 @@ onToggleTranscript(){
     var transcriptToggle
     if(rss.transcripts){
       transcriptToggle = <Accordion.Toggle as={Button}  onClick={this.onToggleTranscript.bind(this)} className="ml-md-5 ml-3" variant="link" eventKey="0">
-        <span>Transcript</span>
+        <span>Transcript({rss.transcripts})</span>
       </Accordion.Toggle>
     }
     var transcriptsContent;
