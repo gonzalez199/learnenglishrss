@@ -264,10 +264,6 @@ onSaveTranscript(){
           this.transcriptDescriptionInput.value = ''
           this.state.isCorrectTranscriptFormat = undefined
           this.state.transcriptPreview = undefined
-          var ref = db.collection('rss').doc(this.props.rss.id);
-          ref.update({
-              transcripts: fb.firestore.FieldValue.increment(1)
-          });
           var clone = Object.assign({}, this.props.rss)
           if(clone.data.transcripts){
             clone.data.transcripts++
@@ -521,12 +517,12 @@ onToggleTranscript(){
       {constantBitrateTag}
       {noAdsTag}
       </div>
-      <div className="mt-1 mb-1">
+      <div className="mt-1 mb-1 d-flex flex-wrap">
       <Button size="md" variant="outline-primary"
       onClick={this.onCopyClick.bind(this, link)}>Copy url</Button>
-      <Button className="ml-md-5 ml-3" size="md" variant="light"
+      <Button className="ml-md-5 ml-3 mr-md-5 mr-3" size="md" variant="light"
       disabled={this.state.voted} onClick={this.onVoteClick.bind(this)}>Vote up</Button>
-      <Button size="md" className="ml-md-5 ml-3" variant="link"
+      <Button size="md" variant="link"
       onClick={this.onContributeTranscriptClick.bind(this, link)}>Contribute transcript</Button>
       </div>
       <MessagePlaceHolder><span className="text-success">{this.state.message}</span></MessagePlaceHolder>
