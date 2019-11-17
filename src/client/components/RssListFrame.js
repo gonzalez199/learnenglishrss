@@ -222,7 +222,11 @@ class RssItem extends Component {
              break
            }
         }
-        this.forceUpdate()
+        var clone = Object.assign({}, this.props.rss)
+        if(clone.data.transcripts){
+          clone.data.transcripts--
+        }
+        this.props.updateRss(clone)
       }
     }
   }
@@ -414,13 +418,13 @@ onToggleTranscript(){
       this.state.transcripts.forEach(transcript=>{
         transcriptData = transcript.data
         if(this.props.authState){
-          btnDeleteTranscript = <Button className="ml-2 text-secondary" size="sm" variant="link"
+          btnDeleteTranscript = <Button className="text-secondary" size="sm" variant="link"
            onClick={this.onDeleteTranscriptClick.bind(this, transcript.id)}>Delete</Button>
 
         }
         transcriptItem = <div key={transcriptItems.length}>
-          <div><span>{transcriptData.link}</span>
-          <Button className="ml-2 text-secondary" size="sm" variant="link"
+          <div className="d-flex flex-wrap"><span  className="mr-2 text-secondary" >{transcriptData.link}</span>
+          <Button size="sm"  className="mr-2 text-secondary"  variant="link"
            onClick={this.onReportTranscriptClick.bind(this, transcript.id)}>Report</Button>
            {btnDeleteTranscript}
            </div>
@@ -608,9 +612,22 @@ class RsssFrame extends Component {
         this.lastDocumentSnapshot = undefined
       }
       documentSnapshots.docs.forEach( item =>{
-        rssItems.push({id: item.id, data: item.data()})
+        if(!this.conditionHaveTranscript || item.data().transcripts){
+          rssItems.push({id: item.id, data: item.data()})
+        }
       })
       this.setRssItems(rssItems, clear)
+      if(this.conditionHaveTranscript){
+        if(documentSnapshots.docs.length>rssItems.length){
+          if(!this.props.items){
+            this.nextItems()
+          }else {
+            if(this.props.items.length%10+rssItems.length<10){
+              this.nextItems()
+            }
+          }
+        }
+      }
     }
   }
 
@@ -618,10 +635,9 @@ class RsssFrame extends Component {
     if(this.state.apiRunning){
       return
     }
-    var first = db.collection("rss").orderBy(this.state.filter, "desc")
-    if(this.conditionHaveTranscript){
-      first = first.orderBy("transcripts", "desc")
-    }
+    var first = db.collection("rss")
+      .orderBy(this.state.filter, "desc")
+
     if(startDocumentSnapshot){
       first = first.startAfter(startDocumentSnapshot)
     }
@@ -689,11 +705,24 @@ class RsssFrame extends Component {
 
   }
 
+  generateRssRows(items){
+    var rows=[]
+    if(items){
+      items.forEach( item =>{
+
+          rows.push(<RssItemConnected key={rows.length} rss={item}/>);
+
+
+      })
+    }
+    return rows
+  }
+
   getContent(){
-    var rows = generateRssRows(this.props.items)
+    var rows = this.generateRssRows(this.props.items)
     var loadMoreView
-    if(rows.length>0){
-      if(rows.length%10===0){
+    if(this.props.items.length>0){
+      if(this.lastDocumentSnapshot){
         loadMoreView = <div><Waypoint onEnter={this.nextItems.bind(this)} /><LoadMoreView loading={this.state.apiRunning}/>
         </div>
       }
@@ -764,17 +793,6 @@ const RssImageStyled = styled.img`
   width: 80px;
   height: 80px;
 `
-
-
-function generateRssRows(items){
-  var rows=[]
-  if(items){
-    items.forEach( item =>{
-      rows.push(<RssItemConnected key={rows.length} rss={item}/>);
-    })
-  }
-  return rows
-}
 
 
 
