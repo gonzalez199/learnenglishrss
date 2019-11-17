@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import rss from './rssReducer'
 import user from './userReducer'
+import report from './reportReducer'
 
 export const initialState = {
   rss: {
@@ -13,7 +14,8 @@ export const makeRootReducer = (history) => {
   return combineReducers({
     router: connectRouter(history),
     rss,
-    user
+    user,
+    report
   })
 }
 export default makeRootReducer

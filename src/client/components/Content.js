@@ -8,6 +8,7 @@ import history from 'Client/history'
 import RssGeneratorFrame from "Components/RssGeneratorFrame"
 import AddRssFrame from "Components/AddRssFrame"
 import RssListFrame from "Components/RssListFrame"
+import ReportManagerFrame from "Components/ReportManagerFrame"
 const FrameStyled = styled.div`
   padding-top: 60px;
   background: whitesmoke;
@@ -35,6 +36,7 @@ class Content extends Component {
       <Route exact path='/' component={RssListFrame}/>
       <Route exact path='/generator/' component={RssGeneratorFrame}/>
       <Route exact path='/share-your-rss/' component={AddRssFrame}/>
+      <Route exact path='/report-manager/' component={ReportManagerFrame}/>
       </Switch>
       </ContentInside>
       </FrameStyled>

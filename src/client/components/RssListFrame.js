@@ -173,7 +173,7 @@ class RssItem extends Component {
     this.setState({voted: true})
   }
   onReportClick(){
-    this.setState({ showReport: true });
+    this.setState({ showReport: true, reportTranscript: undefined });
   }
   onDeleteClick(){
     if(!this.state.chainDeleteRssClick){
@@ -186,6 +186,9 @@ class RssItem extends Component {
         this.forceUpdate()
       }
     }
+  }
+  onReportTranscriptClick(transcript){
+    this.setState({ showReport: true, reportTranscript: transcript});
   }
   onVoteTranscriptClick(transcriptId){
     var ref = db.collection('transcripts').doc(transcriptId);
@@ -205,9 +208,7 @@ class RssItem extends Component {
     this.forceUpdate()
 
   }
-  onReportTranscriptClick(transcriptId){
 
-  }
   onDeleteTranscriptClick(transcriptId){
     if(!this.state.chainDeleteTranscriptClick){
       this.state.chainDeleteTranscriptClick = 1
@@ -238,7 +239,8 @@ handleContributeClose(){
   this.setState({ showContributeTranscript: false});
 }
   handleReportClose() {
-   this.setState({ showReport: false});
+   this.setState({ showReport: false, reported: false, reportMessage: undefined,
+      isReportCopyrightIssue: false});
  }
 
 onSaveTranscript(){
@@ -324,17 +326,20 @@ onCheckTranscript(){
 
 }
  handleSendReport(){
-   const email = this.reportEmailInput.value
+   var email
+   if(this.reportEmailInput){
+     email = this.reportEmailInput.value
+     if(!email){
+       this.setState({reportMessage: "Enter your email address"})
+       return
+     }
+     if(!validateEmail(email)){
+       this.setState({reportMessage: "Wrong format email address"})
+       return
+     }
+   }
    const content = this.reportContentInput.value
-   if(!email){
-     this.setState({reportMessage: "Enter your email address"})
-     return
-   }
 
-   if(!validateEmail(email)){
-     this.setState({reportMessage: "Please enter a vailed email address"})
-     return
-   }
 
    if(!content){
      this.setState({reportMessage: "Enter report content"})
@@ -345,12 +350,21 @@ onCheckTranscript(){
    created: fb.firestore.FieldValue.serverTimestamp(),
    link: rssData.link,
    name: rssData.name,
-   email: email,
    content: content
    };
+   if(email){
+     postData.email = email
+   }
+   if(this.state.reportTranscript){
+     postData.transcript = this.state.reportTranscript
+   }
    db.collection("report").doc().set(postData)
    .then(()=> {
-       this.setState({reportMessage: "Reported", reported: true})
+       this.reportContentInput.value = ''
+       if(this.reportEmailInput){
+         this.reportEmailInput.value = ''
+       }
+       this.setState({reportMessage: "Reported", reported: true, isReportCopyrightIssue: false})
    })
    .catch((error)=> {
      this.setState({reportMessage: "Something error"})
@@ -390,6 +404,11 @@ onToggleTranscript(){
     this.getTranscripts()
   }
 }
+
+onCheckReportCopyrightIssue(){
+  this.setState({isReportCopyrightIssue: !this.state.isReportCopyrightIssue})
+
+}
   render(){
     var itemData = this.props.rss
     var rss = itemData.data
@@ -425,7 +444,7 @@ onToggleTranscript(){
         transcriptItem = <div key={transcriptItems.length}>
           <div className="d-flex flex-wrap"><span  className="mr-2 text-secondary" >{transcriptData.link}</span>
           <Button size="sm"  className="mr-2 text-secondary"  variant="link"
-           onClick={this.onReportTranscriptClick.bind(this, transcript.id)}>Report</Button>
+           onClick={this.onReportTranscriptClick.bind(this, transcript)}>Report</Button>
            {btnDeleteTranscript}
            </div>
            <div>{transcriptData.description}</div>
@@ -444,7 +463,7 @@ onToggleTranscript(){
       })
       transcriptsContent = <div>{transcriptItems}</div>
     }else{
-      transcriptsContent = <div>No transcripts</div>
+      transcriptsContent = <div/>
     }
     var footer
     if(this.state.isCorrectTranscriptFormat){
@@ -480,6 +499,7 @@ onToggleTranscript(){
         noAdsTag = <Badge variant="primary" className="mr-3">No Ads</Badge>
       }
     }
+
     return(
       <RssItemFrameStyled background={this.props.background} className="pl-2 pr-2 pt-2 d-flex">
       <div>
@@ -560,13 +580,28 @@ onToggleTranscript(){
 
       <Modal show={this.state.showReport} onHide={this.handleReportClose.bind(this)}>
           <Modal.Header closeButton>
-            <Modal.Title>Report rss</Modal.Title>
+            <Modal.Title>Report</Modal.Title>
           </Modal.Header>
           <Modal.Body>
           <div>
-          <span>Your email address</span>
-          <input type="email" ref={el => this.reportEmailInput=el} placeholder="email@email.com" className="form-control mb-3" />
-          <span>Report content</span>
+
+
+          <div className="text-3x mb-2"><b><span>Report content</span></b></div>
+          <div className="text-truncate mb-3">
+          <b>{rss.name}</b>
+          </div>
+          <div className="text-truncate mb-3">
+          <b>{rss.link}</b>
+          </div>
+          {this.state.reportTranscript?<div className="text-truncate mb-3">
+          <b>{this.state.reportTranscript.data.link}</b>
+          </div>:<div/>}
+          <label className="mb-1"><div className="d-flex align-items-center ">
+          <input type="checkbox" checked={this.state.isReportCopyrightIssue||false}onChange={()=>{this.onCheckReportCopyrightIssue()}}/>
+          <span className='ml-1'><b>Copyright Issue</b></span></div></label>
+          {this.state.isReportCopyrightIssue?<div><div className="text-1x mb-2 mt-2"><b><span>Your email address</span></b></div>
+          <input type="email" ref={el => this.reportEmailInput=el}
+          placeholder="email@domain.com" className="form-control mb-3" /></div>:<div/>}
           <textarea type="text" rows="10" ref={el => this.reportContentInput=el}
           placeholder="Describe your problem" className="form-control mb-3" />
           </div>
