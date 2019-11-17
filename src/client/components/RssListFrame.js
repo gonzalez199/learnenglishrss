@@ -486,10 +486,10 @@ onCheckReportCopyrightIssue(){
       btnDeleteRss = <Button className="ml-2 text-secondary" size="sm" variant="link"
        onClick={this.onDeleteClick.bind(this, link)}>Delete</Button>
        constantBitrateTag = <label className="mb-0" className="mr-3"><div className="d-flex align-items-center ">
-       <input type="checkbox" checked={rss.isConstantBitrate} onChange={()=>{this.onCheckConstantBitrateTag()}}/>
+       <input type="checkbox" checked={rss.isConstantBitrate||false} onChange={()=>{this.onCheckConstantBitrateTag()}}/>
        <span className='ml-1'>Constant Bitrate</span></div></label>
        noAdsTag = <label className="mb-0" className="mr-3"><div className="d-flex align-items-center ">
-       <input type="checkbox" checked={rss.isNoAds} onChange={()=>{this.onCheckNoAdsTag()}}/>
+       <input type="checkbox" checked={rss.isNoAds||false} onChange={()=>{this.onCheckNoAdsTag()}}/>
        <span className='ml-1'>No Ads</span></div></label>
     }else{
       if(rss.isConstantBitrate){
@@ -732,7 +732,14 @@ class RsssFrame extends Component {
     if(value){
       algolia.search(value)
       .then((responses)=> {
-        this.setRssItems(responses.hits, true)
+        var rssItems = []
+        if(responses.hits){
+          responses.hits.forEach(item=>{
+            item._highlightResult = undefined
+            rssItems.push({id: item.objectID, data: item})
+          })
+        }
+        this.setRssItems(rssItems, true)
       });
     }else{
       this.getData()

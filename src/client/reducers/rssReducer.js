@@ -3,7 +3,6 @@ import {
   GET_RSSS, SEARCH_QUERY, UPDATE_RSS_ITEM
 } from 'Constants/actionTypes';
 function updateRss(list, item){
-  console.log("checkupdaterssitem", item)
   if(list){
     return list.map((content, i) => content.id
     === item.id ? item : content)
