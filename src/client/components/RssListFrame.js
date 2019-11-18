@@ -647,22 +647,10 @@ class RsssFrame extends Component {
         this.lastDocumentSnapshot = undefined
       }
       documentSnapshots.docs.forEach( item =>{
-        if(!this.conditionHaveTranscript || item.data().transcripts){
-          rssItems.push({id: item.id, data: item.data()})
-        }
+        rssItems.push({id: item.id, data: item.data()})
+
       })
       this.setRssItems(rssItems, clear)
-      if(this.conditionHaveTranscript){
-        if(documentSnapshots.docs.length>rssItems.length){
-          if(!this.props.items){
-            this.nextItems()
-          }else {
-            if(this.props.items.length%10+rssItems.length<10){
-              this.nextItems()
-            }
-          }
-        }
-      }
     }
   }
 
@@ -671,7 +659,10 @@ class RsssFrame extends Component {
       return
     }
     var first = db.collection("rss")
-      .orderBy(this.state.filter, "desc")
+    if(this.conditionHaveTranscript){
+      first = first.orderBy("isHaveTranscript", "desc")
+    }
+    first = first.orderBy(this.state.filter, "desc")
 
     if(startDocumentSnapshot){
       first = first.startAfter(startDocumentSnapshot)
