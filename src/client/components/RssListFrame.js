@@ -434,6 +434,7 @@ onCheckReportCopyrightIssue(){
       var transcriptItem
       var transcriptData
       var btnDeleteTranscript
+      var transcriptDescription
       this.state.transcripts.forEach(transcript=>{
         transcriptData = transcript.data
         if(this.props.authState){
@@ -441,14 +442,17 @@ onCheckReportCopyrightIssue(){
            onClick={this.onDeleteTranscriptClick.bind(this, transcript.id)}>Delete</Button>
 
         }
-        transcriptItem = <div key={transcriptItems.length}>
-          <div className="d-flex flex-wrap"><span  className="mr-2 text-secondary" >{transcriptData.link}</span>
-          <Button size="sm"  className="mr-2 text-secondary"  variant="link"
+        if(transcriptData.description){
+          transcriptDescription = <div className="mb-1"><span className="mr-2 text-secondary" >{transcriptData.description}</span></div>
+        }
+        transcriptItem = <div key={transcriptItems.length} className="mb-3">
+          <div className="d-flex flex-wrap align-items-center"><span className="mr-2" >{transcriptData.link}</span>
+          <Button size="sm" className="mr-2 text-secondary"  variant="link"
            onClick={this.onReportTranscriptClick.bind(this, transcript)}>Report</Button>
            {btnDeleteTranscript}
            </div>
-           <div>{transcriptData.description}</div>
-          <div className="mt-2 mb-3"><span>Copied: {transcriptData.copied||0}</span>
+           {transcriptDescription}
+          <div className="mt-0 mb-2"><span>Copied: {transcriptData.copied||0}</span>
           <span className="ml-md-5 ml-3">Votes: {transcriptData.vote||0}</span>
           </div>
 
