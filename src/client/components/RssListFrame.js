@@ -448,7 +448,7 @@ onCheckReportCopyrightIssue(){
            {btnDeleteTranscript}
            </div>
            <div>{transcriptData.description}</div>
-          <div><span>Copied: {transcriptData.copied||0}</span>
+          <div className="mt-2 mb-3"><span>Copied: {transcriptData.copied||0}</span>
           <span className="ml-md-5 ml-3">Votes: {transcriptData.vote||0}</span>
           </div>
 
