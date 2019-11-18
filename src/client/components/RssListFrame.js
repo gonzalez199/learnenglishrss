@@ -443,16 +443,16 @@ onCheckReportCopyrightIssue(){
 
         }
         if(transcriptData.description){
-          transcriptDescription = <div className="mb-1"><span className="mr-2 text-secondary" >{transcriptData.description}</span></div>
+          transcriptDescription = <div className="mt-1 mb-2"><span className="mr-2 text-secondary" >{transcriptData.description}</span></div>
         }
-        transcriptItem = <div key={transcriptItems.length} className="mb-3">
+        transcriptItem = <div key={transcriptItems.length} className="pt-2 pb-2">
           <div className="d-flex flex-wrap align-items-center"><span className="mr-2" >{transcriptData.link}</span>
           <Button size="sm" className="mr-2 text-secondary"  variant="link"
            onClick={this.onReportTranscriptClick.bind(this, transcript)}>Report</Button>
            {btnDeleteTranscript}
            </div>
            {transcriptDescription}
-          <div className="mt-0 mb-2"><span>Copied: {transcriptData.copied||0}</span>
+          <div className="mt-1 mb-3"><span>Copied: {transcriptData.copied||0}</span>
           <span className="ml-md-5 ml-3">Votes: {transcriptData.vote||0}</span>
           </div>
 
