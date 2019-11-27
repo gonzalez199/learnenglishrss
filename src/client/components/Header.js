@@ -53,13 +53,16 @@ class Header extends Component {
     this.state = {chainClick: 0}
     auth.onAuthStateChanged((user) => {
       if(user){
-        var transcriptsQuery = db.collection("users")
-              .where("uid", "==", user.uid)
-              .where("level", "==", 1)
-        transcriptsQuery.get().then((documentSnapshots)=>{
-          if(documentSnapshots.docs.length>0){
-            this.state.user = user
-            this.props.onUserLogined(user)
+        var transcriptsQuery = db.collection("users").doc(user.uid);
+        transcriptsQuery.get().then((doc)=>{
+          if(doc.exists){
+            const data = doc.data()
+            if(data.level===1){
+              this.state.user = user
+              this.props.onUserLogined(user)
+            }else{
+              this.onLogoutClick()
+            }
           }else{
             this.onLogoutClick()
           }
