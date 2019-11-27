@@ -160,19 +160,19 @@ class AddRssFrame extends Component {
       <div className='mt-3 mb-3'>
       <span>Name</span>
       </div>
-      <input type="text" value={this.state.name} onChange={this.handleNameInput.bind(this)} ref={el => this.nameInput=el} placeholder="Rss name" className="form-control mb-3" />
+      <input type="text" value={this.state.name||''} onChange={this.handleNameInput.bind(this)} ref={el => this.nameInput=el} placeholder="Rss name" className="form-control mb-3" />
       </div>
       <div>
       <div className='mb-3'>
       <span>Description</span>
       </div>
-      <textarea value={this.state.description} onChange={this.handleDescriptionInput.bind(this)} ref={el => this.descriptionInput=el} placeholder="Rss description" className="form-control mb-3" />
+      <textarea value={this.state.description||''} onChange={this.handleDescriptionInput.bind(this)} ref={el => this.descriptionInput=el} placeholder="Rss description" className="form-control mb-3" />
       </div>
       <div>
       <div className='mb-3'>
       <span>Tags</span>
       </div>
-      <TagsInput value={this.state.tags} onChange={this.handleChange.bind(this)} />
+      <TagsInput value={this.state.tags||''} onChange={this.handleChange.bind(this)} />
       </div>
       <ButtonStyled disabled={this.state.message||!this.state.link || !this.state.name} onClick={this.addRssLink.bind(this)} className="mt-3 mb-2">Submit</ButtonStyled>
       <p>{this.state.message||''}</p>
