@@ -418,9 +418,10 @@ onCheckReportCopyrightIssue(){
     const link = rss.link
     var imageView
     if(rss.image){
+      rss.image = rss.image.replace("http://", "https://")
       imageView = <img src={rss.image}/>
     }else{
-      imageView = <span>{rss.image}</span>
+      imageView = <span>{rss.name}</span>
     }
     var transcriptToggle
     if(rss.transcripts){

@@ -58,6 +58,9 @@ class AddRssFrame extends Component {
           }else if(feed.image){
             data.image = feed.image.url
           }
+          if(data.image){
+            data.image = data.image.replace("http://", "https://")
+          }
           var key = rssKeyByName(feed.title)
           var docRef = db.collection("rss").doc(key);
             docRef.get().then((doc)=> {

@@ -22,6 +22,8 @@ var cors_proxy = require('cors-anywhere');
 var whitelist = [
   'local-server',
   'https://learnenglishrss.herokuapp.com',
+  'https://learnenglishrss.com',
+  'http://learnenglishrss.com',
   'http://localhost:3091',
   'http://localhost:3090',
 ];
