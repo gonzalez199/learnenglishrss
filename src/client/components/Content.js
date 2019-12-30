@@ -9,6 +9,7 @@ import RssGeneratorFrame from "Components/RssGeneratorFrame"
 import AddRssFrame from "Components/AddRssFrame"
 import RssListFrame from "Components/RssListFrame"
 import ReportManagerFrame from "Components/ReportManagerFrame"
+import commentBox from 'commentbox.io';
 const FrameStyled = styled.div`
   padding-top: 60px;
   background: whitesmoke;
@@ -26,11 +27,13 @@ class Content extends Component {
     super(props);
     this.state = {}
   }
-
+  componentDidMount() {
+      this.removeCommentBox = commentBox('5729482597990400-proj');
+  }
 
   render(){
     return(
-      <FrameStyled className="d-flex justify-content-center">
+      <FrameStyled className="d-block d-md-flex justify-content-center">
       <ContentInside>
       <Switch>
       <Route exact path='/' component={RssListFrame}/>
@@ -39,6 +42,7 @@ class Content extends Component {
       <Route exact path='/report-manager/' component={ReportManagerFrame}/>
       </Switch>
       </ContentInside>
+      <div className="commentbox" />
       </FrameStyled>
     );
   }

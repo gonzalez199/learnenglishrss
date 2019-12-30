@@ -761,7 +761,13 @@ class RsssFrame extends Component {
     var loadMoreView
     if(this.props.items.length>0){
       if(this.lastDocumentSnapshot){
-        loadMoreView = <div><Waypoint onEnter={this.nextItems.bind(this)} /><LoadMoreView loading={this.state.apiRunning}/>
+        var waypointLoadmore
+        if(window.innerWidth >= 768){
+          waypointLoadmore = <Waypoint className="d-none" onEnter={this.nextItems.bind(this)} />
+        }
+        loadMoreView = <div>
+        {waypointLoadmore}
+        <LoadMoreView onClick={this.nextItems.bind(this)} loading={this.state.apiRunning}/>
         </div>
       }
       return <div>
