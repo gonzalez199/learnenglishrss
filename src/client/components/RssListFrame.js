@@ -89,6 +89,9 @@ const SearchBox = styled.div`
   z-index: 100;
   background: white;
 `
+const LoadingPlaceHolderFrame = styled.div`
+  min-height: 100vh;
+`
 const ContentFrame = styled.div`
 `
 const MessagePlaceHolder = styled.div`
@@ -821,7 +824,7 @@ class RsssFrame extends Component {
               </div>
             </HeaderFrame>
             <ContentFrame>
-            {this.props.items?this.getContent():<LoadingView/>}
+            {this.props.items?this.getContent():<LoadingPlaceHolderFrame><LoadingView/></LoadingPlaceHolderFrame>}
             </ContentFrame>
           </StickyContainer>
         )
