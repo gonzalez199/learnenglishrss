@@ -142,7 +142,9 @@ onSwitchModeClick(){
   }
 
   getGithubButton(type){
-    var src = `https://ghbtns.com/github-btn.html?user=masterchief1023&repo=learnenglishrss&type=${type}&count=true&v=2`
+    const user = "masterchief1023"
+    const repo = "learnenglishrss"
+    var src = `https://ghbtns.com/github-btn.html?user=${user}&repo=${repo}&type=${type}&count=true&v=2`
     return <iframe src={src} frameborder="0" scrolling="0" width="90px" height="20px"></iframe>
   }
   render() {
@@ -160,7 +162,11 @@ onSwitchModeClick(){
     }
     var githubStar = this.getGithubButton("star")
     var githubWatch = this.getGithubButton("watch")
-
+    const screenWidth = window.innerWidth
+    var githubButtonsClass
+    if(screenWidth >= devicesSizeNum.md){
+      githubButtonsClass = "position-absolute align-self-end"
+    }
     return (
       <HeaderStyledContainer className="d-flex justify-content-center align-items-center flex-column pl-2 pr-2">
 
@@ -177,7 +183,7 @@ onSwitchModeClick(){
         </Nav.Item>
       </Nav>
 
-      <div className="d-none d-md-block position-absolute align-self-end">
+      <div className={githubButtonsClass}>
       {githubStar}
       {githubWatch}
       </div>
