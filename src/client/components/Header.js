@@ -46,6 +46,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
+
 class Header extends Component {
 
   constructor(props) {
@@ -140,6 +141,10 @@ onSwitchModeClick(){
     );
   }
 
+  getGithubButton(type){
+    var src = `https://ghbtns.com/github-btn.html?user=masterchief1023&repo=learnenglishrss&type=${type}&count=true&v=2`
+    return <iframe src={src} frameborder="0" scrolling="0" width="90px" height="20px"></iframe>
+  }
   render() {
     var btnLogout
     var navItemReport
@@ -153,10 +158,13 @@ onSwitchModeClick(){
     }else{
       btnLogout = <div className="p-2" onClick={this.onLoginGoogle.bind(this)}>|</div>
     }
-    return (
-      <HeaderStyledContainer className="d-flex align-items-center justify-content-center pl-2 pr-2">
+    var githubStar = this.getGithubButton("star")
+    var githubWatch = this.getGithubButton("watch")
 
-      <Nav>
+    return (
+      <HeaderStyledContainer className="d-flex justify-content-center align-items-center flex-column pl-2 pr-2">
+
+      <Nav className="d-flex justify-content-center align-items-center flex-fill">
         {this.menuItem("Home", "/")}
         {this.menuItem("Share Your Rss", "share-your-rss")}
         {this.menuItem("Rss Generator", "generator")}
@@ -168,6 +176,11 @@ onSwitchModeClick(){
           <a href="#commentbox">Comment</a>
         </Nav.Item>
       </Nav>
+
+      <div className="d-none d-md-block position-absolute align-self-end">
+      {githubStar}
+      {githubWatch}
+      </div>
       </HeaderStyledContainer>
 
     );
