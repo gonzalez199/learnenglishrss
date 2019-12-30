@@ -65,11 +65,13 @@ overflow-x: auto;
 const RssImgStyled = styled.div`
   border: solid 3px whitesmoke;
   background: ${props => props.color};
+  height: 100px;
+  width: 100px;
   img{
     object-fit: cover;
     object-position: center;
-    height: 100px;
-    width: 100px;
+    height: 100%;
+    width: 100%;
   }
   span{
     max-height: 69px;
@@ -761,12 +763,7 @@ class RsssFrame extends Component {
     var loadMoreView
     if(this.props.items.length>0){
       if(this.lastDocumentSnapshot){
-        var waypointLoadmore
-        if(window.innerWidth >= 768){
-          waypointLoadmore = <Waypoint className="d-none" onEnter={this.nextItems.bind(this)} />
-        }
         loadMoreView = <div>
-        {waypointLoadmore}
         <LoadMoreView onClick={this.nextItems.bind(this)} loading={this.state.apiRunning}/>
         </div>
       }

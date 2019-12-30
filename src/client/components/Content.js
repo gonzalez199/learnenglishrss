@@ -33,7 +33,7 @@ class Content extends Component {
 
   render(){
     return(
-      <FrameStyled className="d-block d-md-flex justify-content-center">
+      <FrameStyled className="d-flex justify-content-center">
       <ContentInside>
       <Switch>
       <Route exact path='/' component={RssListFrame}/>
@@ -41,8 +41,9 @@ class Content extends Component {
       <Route exact path='/share-your-rss/' component={AddRssFrame}/>
       <Route exact path='/report-manager/' component={ReportManagerFrame}/>
       </Switch>
-      </ContentInside>
       <div className="commentbox" />
+      </ContentInside>
+
       </FrameStyled>
     );
   }

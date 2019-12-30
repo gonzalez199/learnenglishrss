@@ -160,9 +160,13 @@ onSwitchModeClick(){
         {this.menuItem("Home", "/")}
         {this.menuItem("Share Your Rss", "share-your-rss")}
         {this.menuItem("Rss Generator", "generator")}
+
         {navItemReport}
         {btnSwitchMode}
         {btnLogout}
+        <Nav.Item className="d-flex flex-nowrap p-2 mr-2 pointer" >
+          <a href="#commentbox">Comment</a>
+        </Nav.Item>
       </Nav>
       </HeaderStyledContainer>
 

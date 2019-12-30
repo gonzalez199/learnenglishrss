@@ -4,13 +4,14 @@ import styled from 'styled-components';
 const LoadmoreStyled = styled.div`
   height: 35px;
   width: 100%;
-  background: WhiteSmoke;
+  color: white;
+  background: #007bff;
 `
 const LoadingView = (props) => {
   if(props.loading){
-      return <div className={props.className}><LoadmoreStyled className="pointer d-flex align-items-center justify-content-center"><span>Loading...</span></LoadmoreStyled></div>
+      return <div className={props.className}><LoadmoreStyled className="pointer d-flex align-items-center justify-content-center"><span>Please wait...</span></LoadmoreStyled></div>
     }else{
-    const text = props.text||"Load more"
+    const text = props.text||"Show more items"
     return <div onClick={props.onClick} className={props.className}><LoadmoreStyled className="pointer d-flex align-items-center justify-content-center"><span>{text}</span></LoadmoreStyled></div>
   }
 
